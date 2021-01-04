@@ -21,6 +21,46 @@ in the general Velocity configuration.
   - Permission: `SockExchange.RunCmd`
   - Description: Use this command to send commands to run on other servers (commands will run as console)
 
+## API
+Before utilizing the API in a Spigot plugin, add `depend: [SockExchange]` or `softdepend: [SockExchange]` to your plugin's `plugin.yml`.
+For a Velocity plugin, add `@Dependency(id = "sockexchange")` to the dependency list of your plugin.
+
+### Maven
+Add this repository to your `pom.xml`:
+```xml
+<repository>
+  <id>jitpack.io</id>
+  <url>https://jitpack.io</url>
+</repository>  
+```
+
+Add the dependency and replace `<version>...</version>` with the latest release version:
+```xml
+<dependency>
+  <groupId>com.github.quantiom</groupId>
+  <artifactId>SockExchangeVelocity</artifactId>
+  <version>v1.0.0</version>
+</dependency>
+```
+
+### Gradle
+Add it in your root `build.gradle` at the end of repositories:
+```gradle
+allprojects {
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
+
+Add the dependency and replace `v1.0.0` with the latest release version:
+```gradle
+dependencies {
+        implementation 'com.github.quantiom:SockExchangeVelocity:v1.0.0'
+}
+```
+
 ## [Spigot API](https://github.com/GeeItsZee/SockExchange/blob/master/src/main/java/com/gmail/tracebachi/SockExchange/Spigot/SockExchangeApi.java)
 Use this API for plugins running on Spigot.
 
