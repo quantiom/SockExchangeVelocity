@@ -35,16 +35,16 @@ public class PacketIdMapping
     byte packetId = 0;
 
     // Registration packets
-    addIdAndPacketClassPair(++packetId, PacketToBungeeRegister.class);
+    addIdAndPacketClassPair(++packetId, PacketToVelocityRegister.class);
     addIdAndPacketClassPair(++packetId, PacketToSpigotRegister.class);
 
     // Request and response packets
-    addIdAndPacketClassPair(++packetId, PacketToBungeeRequest.class);
+    addIdAndPacketClassPair(++packetId, PacketToVelocityRequest.class);
     addIdAndPacketClassPair(++packetId, PacketToSpigotRequest.class);
     addIdAndPacketClassPair(++packetId, PacketToAnyResponse.class);
 
     // Forward packet
-    addIdAndPacketClassPair(++packetId, PacketToBungeeForward.class);
+    addIdAndPacketClassPair(++packetId, PacketToVelocityForward.class);
   }
 
   public static Class<? extends AbstractPacket> idToPacket(byte id)

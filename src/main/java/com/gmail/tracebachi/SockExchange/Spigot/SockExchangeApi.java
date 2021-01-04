@@ -19,7 +19,7 @@ package com.gmail.tracebachi.SockExchange.Spigot;
 
 import com.gmail.tracebachi.SockExchange.Messages.ReceivedMessageNotifier;
 import com.gmail.tracebachi.SockExchange.Messages.ResponseMessage;
-import com.gmail.tracebachi.SockExchange.Netty.SpigotToBungeeConnection;
+import com.gmail.tracebachi.SockExchange.Netty.SpigotToVelocityConnection;
 import com.gmail.tracebachi.SockExchange.SockExchangeConstants.Channels;
 import com.gmail.tracebachi.SockExchange.SpigotServerInfo;
 import com.gmail.tracebachi.SockExchange.Utilities.ExtraPreconditions;
@@ -55,11 +55,11 @@ public class SockExchangeApi
   private final SpigotTieIn spigotTieIn;
   private final ScheduledExecutorService scheduledExecutorService;
   private final ReceivedMessageNotifier messageNotifier;
-  private final SpigotToBungeeConnection connection;
+  private final SpigotToVelocityConnection connection;
 
   protected SockExchangeApi(
     SpigotTieIn spigotTieIn, ScheduledExecutorService scheduledExecutorService,
-    ReceivedMessageNotifier messageNotifier, SpigotToBungeeConnection connection)
+    ReceivedMessageNotifier messageNotifier, SpigotToVelocityConnection connection)
   {
     Preconditions.checkNotNull(spigotTieIn, "spigotTieIn");
     Preconditions.checkNotNull(scheduledExecutorService, "scheduledExecutorService");
@@ -134,9 +134,9 @@ public class SockExchangeApi
    * @param channelName Name of channel to send bytes to
    * @param messageBytes Bytes to send
    */
-  public void sendToBungee(String channelName, byte[] messageBytes)
+  public void sendToVelocity(String channelName, byte[] messageBytes)
   {
-    sendToBungee(channelName, messageBytes, null, 0);
+    sendToVelocity(channelName, messageBytes, null, 0);
   }
 
   /**
@@ -150,11 +150,11 @@ public class SockExchangeApi
    * @param consumer Consumer to run once there is a response (or a failure)
    * @param timeoutInMillis Milliseconds to wait for a response before returning a timeout response
    */
-  public void sendToBungee(
+  public void sendToVelocity(
     String channelName, byte[] messageBytes, Consumer<ResponseMessage> consumer,
     long timeoutInMillis)
   {
-    connection.sendToBungee(channelName, messageBytes, consumer, timeoutInMillis);
+    connection.sendToVelocity(channelName, messageBytes, consumer, timeoutInMillis);
   }
 
   /**
@@ -282,7 +282,7 @@ public class SockExchangeApi
     ExtraPreconditions.checkNotEmpty(serverName, "serverName");
 
     byte[] messageBytes = getBytesForMovingPlayers(serverName, playerNames);
-    sendToBungee(Channels.MOVE_PLAYERS, messageBytes);
+    sendToVelocity(Channels.MOVE_PLAYERS, messageBytes);
   }
 
   /**
@@ -293,14 +293,14 @@ public class SockExchangeApi
    *
    * @param commands List of commands to run in order
    */
-  public void sendCommandsToBungee(List<String> commands)
+  public void sendCommandsToVelocity(List<String> commands)
   {
     ExtraPreconditions.checkNotEmpty(commands, "commands");
     ExtraPreconditions.checkElements(commands, (str) -> str != null && !str.isEmpty(),
       "Null or empty string in commands");
 
     byte[] messageBytes = getBytesForSendingCommands(getServerName(), commands);
-    sendToBungee(Channels.RUN_CMD, messageBytes);
+    sendToVelocity(Channels.RUN_CMD, messageBytes);
   }
 
   /**
@@ -345,7 +345,7 @@ public class SockExchangeApi
     if (playerName != null && !playerName.isEmpty() && !playerName.equalsIgnoreCase("console"))
     {
       byte[] messageBytes = getBytesForSendingChatMessages(messages, playerName, null);
-      sendToBungee(Channels.CHAT_MESSAGES, messageBytes);
+      sendToVelocity(Channels.CHAT_MESSAGES, messageBytes);
       return;
     }
 
@@ -359,7 +359,7 @@ public class SockExchangeApi
     }
 
     byte[] messageBytes = getBytesForSendingChatMessages(messages, null, serverName);
-    sendToBungee(Channels.CHAT_MESSAGES, messageBytes);
+    sendToVelocity(Channels.CHAT_MESSAGES, messageBytes);
   }
 
   private static byte[] getBytesForMovingPlayers(String serverName, Set<String> playerNames)

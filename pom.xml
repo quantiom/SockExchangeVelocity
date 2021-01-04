@@ -14,8 +14,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>velocity</id>
+            <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -32,12 +32,25 @@
             <version>1.10.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>net.md-5</groupId>
             <artifactId>BungeeCord</artifactId>
             <version>1217</version>
             <type>jar</type>
             <scope>provided</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>1.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spongepowered</groupId>
+            <!-- Modify this line to target the loader you wish to use. -->
+            <artifactId>configurate-yaml</artifactId>
+            <version>4.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -58,7 +71,34 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/SPONGEPO.SF</exclude>
+                                        <exclude>META-INF/SPONGEPO.DSA</exclude>
+                                        <exclude>META-INF/SPONGEPO.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <finalName>SockExchange</finalName>
     </build>
 
 </project>

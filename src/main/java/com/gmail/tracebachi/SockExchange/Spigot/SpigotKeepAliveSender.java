@@ -64,6 +64,6 @@ public class SpigotKeepAliveSender implements Registerable
 
   private void sendKeepAlive()
   {
-    api.sendToBungee(Channels.KEEP_ALIVE, SINGLE_BYTE_MESSAGE);
+    api.sendToVelocity(Channels.KEEP_ALIVE, SINGLE_BYTE_MESSAGE);
   }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.SockExchange.Bungee;
+package com.gmail.tracebachi.SockExchange.Velocity;
 
 import com.gmail.tracebachi.SockExchange.Messages.ReceivedMessage;
 import com.gmail.tracebachi.SockExchange.SockExchangeConstants.Channels;
@@ -32,53 +32,53 @@ import java.util.function.Consumer;
  */
 public class ChatMessageChannelListener implements Consumer<ReceivedMessage>, Registerable
 {
-  private final SockExchangeApi api;
+    private final SockExchangeApi api;
 
-  ChatMessageChannelListener(SockExchangeApi api)
-  {
-    Preconditions.checkNotNull(api, "api");
-
-    this.api = api;
-  }
-
-  @Override
-  public void register()
-  {
-    api.getMessageNotifier().register(Channels.CHAT_MESSAGES, this);
-  }
-
-  @Override
-  public void unregister()
-  {
-    api.getMessageNotifier().unregister(Channels.CHAT_MESSAGES, this);
-  }
-
-  @Override
-  public void accept(ReceivedMessage message)
-  {
-    ByteArrayDataInput in = message.getDataInput();
-
-    // Read all the chat messages
-    int messagesCount = in.readInt();
-    List<String> chatMessages = new ArrayList<>();
-    for (int i = 0; i < messagesCount; i++)
+    ChatMessageChannelListener(SockExchangeApi api)
     {
-      chatMessages.add(in.readUTF());
+        Preconditions.checkNotNull(api, "api");
+
+        this.api = api;
     }
 
-    String playerName = null;
-    String serverName = null;
-    boolean forPlayer = in.readBoolean();
-
-    if (forPlayer)
+    @Override
+    public void register()
     {
-      playerName = in.readUTF();
-    }
-    else
-    {
-      serverName = in.readUTF();
+        api.getMessageNotifier().register(Channels.CHAT_MESSAGES, this);
     }
 
-    api.sendChatMessages(chatMessages, playerName, serverName);
-  }
+    @Override
+    public void unregister()
+    {
+        api.getMessageNotifier().unregister(Channels.CHAT_MESSAGES, this);
+    }
+
+    @Override
+    public void accept(ReceivedMessage message)
+    {
+        ByteArrayDataInput in = message.getDataInput();
+
+        // Read all the chat messages
+        int messagesCount = in.readInt();
+        List<String> chatMessages = new ArrayList<>();
+        for (int i = 0; i < messagesCount; i++)
+        {
+            chatMessages.add(in.readUTF());
+        }
+
+        String playerName = null;
+        String serverName = null;
+        boolean forPlayer = in.readBoolean();
+
+        if (forPlayer)
+        {
+            playerName = in.readUTF();
+        }
+        else
+        {
+            serverName = in.readUTF();
+        }
+
+        api.sendChatMessages(chatMessages, playerName, serverName);
+    }
 }

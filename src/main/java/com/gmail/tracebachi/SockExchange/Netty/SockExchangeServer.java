@@ -17,7 +17,7 @@
  */
 package com.gmail.tracebachi.SockExchange.Netty;
 
-import com.gmail.tracebachi.SockExchange.Bungee.BungeeTieIn;
+import com.gmail.tracebachi.SockExchange.Velocity.VelocityTieIn;
 import com.google.common.base.Preconditions;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -37,7 +37,7 @@ public class SockExchangeServer
 
   private boolean started = false;
 
-  public SockExchangeServer(int port, int threads, BungeeTieIn tieIn)
+  public SockExchangeServer(int port, int threads, VelocityTieIn tieIn)
   {
     Preconditions.checkArgument(port > 0, "port");
     Preconditions.checkNotNull(tieIn, "tieIn");

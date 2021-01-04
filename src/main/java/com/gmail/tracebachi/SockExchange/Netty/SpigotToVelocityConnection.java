@@ -23,7 +23,7 @@ import com.gmail.tracebachi.SockExchange.Messages.ReceivedMessageNotifier;
 import com.gmail.tracebachi.SockExchange.Messages.ResponseMessage;
 import com.gmail.tracebachi.SockExchange.Messages.ResponseStatus;
 import com.gmail.tracebachi.SockExchange.Netty.Packets.*;
-import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToBungeeRequest.DestinationType;
+import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToVelocityRequest.DestinationType;
 import com.gmail.tracebachi.SockExchange.Utilities.BasicLogger;
 import com.gmail.tracebachi.SockExchange.Utilities.ExtraPreconditions;
 import com.gmail.tracebachi.SockExchange.Utilities.LongIdCounterMap;
@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 /**
  * @author GeeItsZee (tracebachi@gmail.com)
  */
-public class SpigotToBungeeConnection extends AbstractPacketHandler
+public class SpigotToVelocityConnection extends AbstractPacketHandler
 {
   private final String serverName;
   private final String password;
@@ -48,7 +48,7 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
   private final BasicLogger basicLogger;
   private volatile boolean registered;
 
-  public SpigotToBungeeConnection(
+  public SpigotToVelocityConnection(
     String serverName, String password, Executor executor, ReceivedMessageNotifier messageNotifier,
     LongIdCounterMap<ExpirableConsumer<ResponseMessage>> responseConsumerMap,
     BasicLogger basicLogger)
@@ -78,7 +78,7 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
   {
     super.onChannelActive(channel);
 
-    PacketToBungeeRegister packet = new PacketToBungeeRegister();
+    PacketToVelocityRegister packet = new PacketToVelocityRegister();
     packet.setPassword(password);
     packet.setServerName(serverName);
 
@@ -178,14 +178,14 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
     }
   }
 
-  public void sendToBungee(
+  public void sendToVelocity(
     String channelName, byte[] messageBytes, Consumer<ResponseMessage> consumer,
     long timeoutInMillis)
   {
     ExtraPreconditions.checkNotEmpty(channelName, "channelName");
     Preconditions.checkNotNull(messageBytes, "messageBytes");
 
-    PacketToBungeeRequest packet = new PacketToBungeeRequest();
+    PacketToVelocityRequest packet = new PacketToVelocityRequest();
     packet.setDestinationType(DestinationType.BUNGEE);
     packet.setChannelName(channelName);
     packet.setMessageBytes(messageBytes);
@@ -219,7 +219,7 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
       return;
     }
 
-    PacketToBungeeRequest packet = new PacketToBungeeRequest();
+    PacketToVelocityRequest packet = new PacketToVelocityRequest();
     packet.setDestinationType(DestinationType.SERVER_NAME);
     packet.setServerOrPlayerName(destServerName);
     packet.setChannelName(channelName);
@@ -247,7 +247,7 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
     Preconditions.checkNotNull(messageBytes, "messageBytes");
     ExtraPreconditions.checkNotEmpty(playerName, "playerName");
 
-    PacketToBungeeRequest packet = new PacketToBungeeRequest();
+    PacketToVelocityRequest packet = new PacketToVelocityRequest();
     packet.setDestinationType(DestinationType.PLAYER_NAME);
     packet.setServerOrPlayerName(playerName);
     packet.setChannelName(channelName);
@@ -279,7 +279,7 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
     ExtraPreconditions.checkElements(serverNameList, (str) -> str != null && !str.isEmpty(),
       "Null or empty string in serverNameList");
 
-    PacketToBungeeForward packet = new PacketToBungeeForward();
+    PacketToVelocityForward packet = new PacketToVelocityForward();
     packet.setServerNames(serverNameList);
     packet.setChannelName(channelName);
     packet.setMessageBytes(messageBytes);
@@ -358,7 +358,7 @@ public class SpigotToBungeeConnection extends AbstractPacketHandler
   }
 
   private void saveConsumerAndUpdatePacket(
-    Consumer<ResponseMessage> consumer, long timeoutInMillis, PacketToBungeeRequest packet)
+    Consumer<ResponseMessage> consumer, long timeoutInMillis, PacketToVelocityRequest packet)
   {
     Preconditions.checkArgument(timeoutInMillis > 0, "timeoutInMillis must be > 0");
 

@@ -23,7 +23,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author GeeItsZee (tracebachi@gmail.com)
  */
-public class PacketToBungeeRequest extends AbstractPacket
+public class PacketToVelocityRequest extends AbstractPacket
 {
   private DestinationType destinationType;
   private String serverOrPlayerName;

@@ -17,9 +17,11 @@
  */
 package com.gmail.tracebachi.SockExchange.Netty;
 
-import com.gmail.tracebachi.SockExchange.Bungee.BungeeTieIn;
-import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToBungeeRegister;
+import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToVelocityRegister;
 import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToSpigotRegister;
+import com.gmail.tracebachi.SockExchange.Velocity.SockExchangeApi;
+import com.gmail.tracebachi.SockExchange.Velocity.SockExchangePlugin;
+import com.gmail.tracebachi.SockExchange.Velocity.VelocityTieIn;
 import com.google.common.base.Preconditions;
 
 /**
@@ -27,17 +29,17 @@ import com.google.common.base.Preconditions;
  */
 public class BungeeRegistrationPacketHandler extends AbstractPacketHandler
 {
-  private final BungeeTieIn bungeeTieIn;
+  private final VelocityTieIn velocityTieIn;
 
-  public BungeeRegistrationPacketHandler(BungeeTieIn bungeeTieIn)
+  public BungeeRegistrationPacketHandler(VelocityTieIn velocityTieIn)
   {
-    Preconditions.checkNotNull(bungeeTieIn, "bungeeTieIn");
+    Preconditions.checkNotNull(velocityTieIn, "VelocityTieIn");
 
-    this.bungeeTieIn = bungeeTieIn;
+    this.velocityTieIn = velocityTieIn;
   }
 
   @Override
-  public void handle(PacketToBungeeRegister packet)
+  public void handle(PacketToVelocityRegister packet)
   {
     Preconditions.checkNotNull(packet, "packet");
     Preconditions.checkState(channel != null, "Inactive channel");
@@ -45,7 +47,7 @@ public class BungeeRegistrationPacketHandler extends AbstractPacketHandler
     PacketToSpigotRegister response = new PacketToSpigotRegister();
     String password = packet.getPassword();
 
-    if (!bungeeTieIn.doesRegistrationPasswordMatch(password))
+    if (!velocityTieIn.doesRegistrationPasswordMatch(password))
     {
       response.setResult(PacketToSpigotRegister.Result.INCORRECT_PASSWORD);
       channel.writeAndFlush(response).addListener((future) -> channel.close());
@@ -53,7 +55,7 @@ public class BungeeRegistrationPacketHandler extends AbstractPacketHandler
     }
 
     String serverName = packet.getServerName();
-    BungeeToSpigotConnection connection = bungeeTieIn.getConnection(serverName);
+    BungeeToSpigotConnection connection = velocityTieIn.getConnection(serverName);
 
     if (connection == null || !connection.getServerName().equals(serverName))
     {

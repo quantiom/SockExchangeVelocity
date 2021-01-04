@@ -35,10 +35,10 @@ public class SpigotPacketEncoder extends MessageToByteEncoder<AbstractPacket>
   {
     byte packetId = PacketIdMapping.packetToId(packet.getClass());
 
-    if (isIdForPacket(packetId, PacketToBungeeRegister.class) ||
-      isIdForPacket(packetId, PacketToBungeeRequest.class) ||
+    if (isIdForPacket(packetId, PacketToVelocityRegister.class) ||
+      isIdForPacket(packetId, PacketToVelocityRequest.class) ||
       isIdForPacket(packetId, PacketToAnyResponse.class) ||
-      isIdForPacket(packetId, PacketToBungeeForward.class))
+      isIdForPacket(packetId, PacketToVelocityForward.class))
     {
       out.writeByte(packetId);
       packet.write(out);

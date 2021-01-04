@@ -17,7 +17,7 @@
  */
 package com.gmail.tracebachi.SockExchange.Netty;
 
-import com.gmail.tracebachi.SockExchange.Bungee.BungeeTieIn;
+import com.gmail.tracebachi.SockExchange.Velocity.VelocityTieIn;
 import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -43,9 +43,9 @@ public class BungeePipelineInitializer extends ChannelInitializer
   private static final int FRAME_LENGTH_FIELD_LENGTH = 3;
   private static final int FRAME_LENGTH_ADJUSTMENT = 0;
 
-  private final BungeeTieIn tieIn;
+  private final VelocityTieIn tieIn;
 
-  public BungeePipelineInitializer(BungeeTieIn tieIn)
+  public BungeePipelineInitializer(VelocityTieIn tieIn)
   {
     Preconditions.checkNotNull(tieIn, "tieIn");
 

@@ -23,7 +23,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author GeeItsZee (tracebachi@gmail.com)
  */
-public class PacketToBungeeRegister extends AbstractPacket
+public class PacketToVelocityRegister extends AbstractPacket
 {
   private String password;
   private String serverName;

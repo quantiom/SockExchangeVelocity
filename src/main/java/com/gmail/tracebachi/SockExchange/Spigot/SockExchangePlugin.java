@@ -22,7 +22,7 @@ import com.gmail.tracebachi.SockExchange.Messages.ReceivedMessageNotifier;
 import com.gmail.tracebachi.SockExchange.Messages.ResponseMessage;
 import com.gmail.tracebachi.SockExchange.Messages.ResponseStatus;
 import com.gmail.tracebachi.SockExchange.Netty.SockExchangeClient;
-import com.gmail.tracebachi.SockExchange.Netty.SpigotToBungeeConnection;
+import com.gmail.tracebachi.SockExchange.Netty.SpigotToVelocityConnection;
 import com.gmail.tracebachi.SockExchange.Scheduler.AwaitableExecutor;
 import com.gmail.tracebachi.SockExchange.Scheduler.ScheduledExecutorServiceWrapper;
 import com.gmail.tracebachi.SockExchange.SpigotServerInfo;
@@ -57,7 +57,7 @@ public class SockExchangePlugin extends JavaPlugin implements SpigotTieIn
   private BasicLogger basicLogger;
   private ReceivedMessageNotifier messageNotifier;
   private LongIdCounterMap<ExpirableConsumer<ResponseMessage>> responseConsumerMap;
-  private SpigotToBungeeConnection connection;
+  private SpigotToVelocityConnection connection;
   private SockExchangeClient sockExchangeClient;
   private ScheduledFuture<?> consumerTimeoutCleanupFuture;
 
@@ -111,7 +111,7 @@ public class SockExchangePlugin extends JavaPlugin implements SpigotTieIn
       this::checkForConsumerTimeouts, 5, 5, TimeUnit.SECONDS);
 
     // Create the Spigot-to-Bungee connection
-    connection = new SpigotToBungeeConnection(
+    connection = new SpigotToVelocityConnection(
       serverName, registrationPassword, awaitableExecutor, messageNotifier, responseConsumerMap,
       basicLogger);
 

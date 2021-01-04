@@ -97,7 +97,7 @@ public class RunCmdCommand implements CommandExecutor, Registerable
 
     if (doesArrayContain(argServers, DEST_BUNGEE))
     {
-      api.sendCommandsToBungee(commands);
+      api.sendCommandsToVelocity(commands);
 
       sender.sendMessage(formatMap.format(FormatNames.COMMAND_SENT, DEST_BUNGEE));
       return true;

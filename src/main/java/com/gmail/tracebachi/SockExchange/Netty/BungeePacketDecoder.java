@@ -18,9 +18,9 @@
 package com.gmail.tracebachi.SockExchange.Netty;
 
 import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToAnyResponse;
-import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToBungeeForward;
-import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToBungeeRegister;
-import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToBungeeRequest;
+import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToVelocityForward;
+import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToVelocityRegister;
+import com.gmail.tracebachi.SockExchange.Netty.Packets.PacketToVelocityRequest;
 import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -57,16 +57,16 @@ public class BungeePacketDecoder extends MessageToMessageDecoder<ByteBuf>
   {
     byte packetId = in.readByte();
 
-    if (isIdForPacket(packetId, PacketToBungeeRegister.class))
+    if (isIdForPacket(packetId, PacketToVelocityRegister.class))
     {
-      PacketToBungeeRegister packet = new PacketToBungeeRegister();
+      PacketToVelocityRegister packet = new PacketToVelocityRegister();
       packet.read(in);
 
       packetHandler.handle(packet);
     }
-    else if (isIdForPacket(packetId, PacketToBungeeRequest.class))
+    else if (isIdForPacket(packetId, PacketToVelocityRequest.class))
     {
-      PacketToBungeeRequest packet = new PacketToBungeeRequest();
+      PacketToVelocityRequest packet = new PacketToVelocityRequest();
       packet.read(in);
 
       packetHandler.handle(packet);
@@ -78,9 +78,9 @@ public class BungeePacketDecoder extends MessageToMessageDecoder<ByteBuf>
 
       packetHandler.handle(packet);
     }
-    else if (isIdForPacket(packetId, PacketToBungeeForward.class))
+    else if (isIdForPacket(packetId, PacketToVelocityForward.class))
     {
-      PacketToBungeeForward packet = new PacketToBungeeForward();
+      PacketToVelocityForward packet = new PacketToVelocityForward();
       packet.read(in);
 
       packetHandler.handle(packet);

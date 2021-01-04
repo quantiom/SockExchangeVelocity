@@ -1,12 +1,12 @@
-# SockExchange
-Netty-based server and client for communicating with BungeeCord and Spigot servers
+# SockExchangeVelocity
+Netty-based server and client for communicating with Velocity and Spigot servers
 
 ## Installation
-Copy the same JAR into the plugins directory of your BungeeCord and Spigot installations. The
-[default BungeeCord configuration](https://github.com/GeeItsZee/SockExchange/blob/master/src/main/resources/bungee-config.yml)
-should be fine unless you want to edit something. However, the [default Spigot configuration](https://github.com/GeeItsZee/SockExchange/blob/master/src/main/resources/config.yml)
+Copy the same JAR into the plugins directory of your Velocity and Spigot installations. The
+[default Velocity configuration](https://github.com/quantiom/SockExchangeVelocity/blob/master/src/main/resources/velocity-config.yml)
+should be fine unless you want to edit something. However, the [default Spigot configuration](https://github.com/quantiom/SockExchangeVelocity/blob/master/src/main/resources/config.yml)
 sets the `ServerName` to `world` which should be changed to the name of that server as configured
-in the general BungeeCord configuration.
+in the general Velocity configuration.
 
 ## Commands
 `/moveto`
@@ -87,9 +87,9 @@ class Example {
       }
     };
 
-    // Send a message to Bungee (with or without a consumer for a response)
-    api.sendToBungee(channelName, bytes);
-    api.sendToBungee(channelName, bytes, responseConsumer, timeoutInMillis);
+    // Send a message to Velocity (with or without a consumer for a response)
+    api.sendToVelocity(channelName, bytes);
+    api.sendToVelocity(channelName, bytes, responseConsumer, timeoutInMillis);
 
     // Send a message to Spigot (with or without a consumer for a response)
     String destServerName = "...";
@@ -112,18 +112,18 @@ class Example {
     List<String> chatMessages = new ArrayList<>();
     api.sendChatMessages(chatMessages, playerToFind, null);
     api.sendChatMessages(chatMessages, null, destServerName);
-    api.sendChatMessages(chatMessages, null, "Bungee");
+    api.sendChatMessages(chatMessages, null, "Velocity");
     api.sendChatMessages(chatMessages, playerToFind, destServerName);
 
     // Move players to a different server
     Set<String> playersToMove = new HashSet<>();
     api.movePlayers(playersToMove, destServerName);
 
-    // Run commands on a single/multiple servers or Bungee
+    // Run commands on a single/multiple servers or Velocity
     List<String> commands = new ArrayList<>();
     api.sendCommandsToServers(commands, Collections.emptyList());
     api.sendCommandsToServers(commands, listOfServerNames);
-    api.sendCommandsToBungee(commands);
+    api.sendCommandsToVelocity(commands);
 
     // Send chat messages to a player
     List<String> messages = new ArrayList<>();
@@ -132,13 +132,13 @@ class Example {
 
     // Send chat messages to a server console
     api.sendChatMessages(messages, null, serverName);
-    api.sendChatMessages(messages, null, "Bungee");
+    api.sendChatMessages(messages, null, "Velocity");
   }
 }
 ```
 
-## [BungeeCord API](https://github.com/GeeItsZee/SockExchange/blob/master/src/main/java/com/gmail/tracebachi/SockExchange/Bungee/SockExchangeApi.java)
-Use this API for plugins running on BungeeCord.
+## [Velocity API](https://github.com/quantiom/SockExchangeVelocity/blob/master/src/main/java/com/gmail/tracebachi/SockExchange/Velocity/SockExchangeApi.java)
+Use this API for plugins running on Velocity.
 
 ```java
 class Example {
@@ -213,31 +213,12 @@ class Example {
     api.sendCommandsToServers(commands, serverList);
 
     // Send a chat message to an online player or console on any server
-    String playerToFind = "GeeItsZee";
+    String playerToFind = "quantiom";
     List<String> chatMessages = new ArrayList<>();
     api.sendChatMessages(chatMessages, playerToFind, null);
     api.sendChatMessages(chatMessages, null, destServerName);
-    api.sendChatMessages(chatMessages, null, "Bungee");
+    api.sendChatMessages(chatMessages, null, "Velocity");
     api.sendChatMessages(chatMessages, playerToFind, destServerName);
   }
 }
-```
-
-## Licence ([GPLv3](http://www.gnu.org/licenses/gpl-3.0.en.html))
-```
-DeltaRedis - BungeeCord and Spigot plugin for multi-server communication.
-Copyright (C) 2015  Trace Bachi (tracebachi@gmail.com)
-
-DeltaRedis is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-DeltaRedis is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
 ```

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @author GeeItsZee (tracebachi@gmail.com)
  */
-public class PacketToBungeeForward extends AbstractPacket
+public class PacketToVelocityForward extends AbstractPacket
 {
   private List<String> serverNames;
   private String channelName;

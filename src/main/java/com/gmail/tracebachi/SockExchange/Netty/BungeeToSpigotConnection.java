@@ -17,7 +17,6 @@
  */
 package com.gmail.tracebachi.SockExchange.Netty;
 
-import com.gmail.tracebachi.SockExchange.Bungee.BungeeTieIn;
 import com.gmail.tracebachi.SockExchange.ExpirableConsumer;
 import com.gmail.tracebachi.SockExchange.Messages.ReceivedMessage;
 import com.gmail.tracebachi.SockExchange.Messages.ReceivedMessageNotifier;
@@ -27,8 +26,10 @@ import com.gmail.tracebachi.SockExchange.Netty.Packets.*;
 import com.gmail.tracebachi.SockExchange.Utilities.BasicLogger;
 import com.gmail.tracebachi.SockExchange.Utilities.ExtraPreconditions;
 import com.gmail.tracebachi.SockExchange.Utilities.LongIdCounterMap;
+import com.gmail.tracebachi.SockExchange.Velocity.VelocityTieIn;
 import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -43,27 +44,27 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
   private final Executor executor;
   private final ReceivedMessageNotifier receivedMessageNotifier;
   private final LongIdCounterMap<ExpirableConsumer<ResponseMessage>> waitingForResponse;
-  private final BasicLogger basicLogger;
-  private final BungeeTieIn bungeeTieIn;
+  private final Logger basicLogger;
+  private final VelocityTieIn velocityTieIn;
 
   public BungeeToSpigotConnection(
     String serverName, Executor executor, ReceivedMessageNotifier receivedMessageNotifier,
     LongIdCounterMap<ExpirableConsumer<ResponseMessage>> waitingForResponse,
-    BasicLogger basicLogger, BungeeTieIn bungeeTieIn)
+    Logger basicLogger, VelocityTieIn velocityTieIn)
   {
     ExtraPreconditions.checkNotEmpty(serverName, "serverName");
     Preconditions.checkNotNull(executor, "executor");
     Preconditions.checkNotNull(receivedMessageNotifier, "receivedMessageNotifier");
     Preconditions.checkNotNull(waitingForResponse, "waitingForResponse");
     Preconditions.checkNotNull(basicLogger, "basicLogger");
-    Preconditions.checkNotNull(bungeeTieIn, "bungeeTieIn");
+    Preconditions.checkNotNull(velocityTieIn, "VelocityTieIn");
 
     this.serverName = serverName;
     this.executor = executor;
     this.receivedMessageNotifier = receivedMessageNotifier;
     this.waitingForResponse = waitingForResponse;
     this.basicLogger = basicLogger;
-    this.bungeeTieIn = bungeeTieIn;
+    this.velocityTieIn = velocityTieIn;
   }
 
   public String getServerName()
@@ -88,15 +89,15 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
   }
 
   @Override
-  public void handle(PacketToBungeeRequest packet)
+  public void handle(PacketToVelocityRequest packet)
   {
     Preconditions.checkNotNull(packet, "packet");
     Preconditions.checkState(channel != null, "Channel is not active");
 
-    PacketToBungeeRequest.DestinationType destinationType = packet.getDestinationType();
+    PacketToVelocityRequest.DestinationType destinationType = packet.getDestinationType();
     Long consumerId = packet.getConsumerId();
 
-    if (destinationType == PacketToBungeeRequest.DestinationType.BUNGEE)
+    if (destinationType == PacketToVelocityRequest.DestinationType.BUNGEE)
     {
       // Debug
       basicLogger.debug(
@@ -108,7 +109,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
       return;
     }
 
-    if (destinationType == PacketToBungeeRequest.DestinationType.SERVER_NAME)
+    if (destinationType == PacketToVelocityRequest.DestinationType.SERVER_NAME)
     {
       String destServerName = packet.getServerOrPlayerName();
 
@@ -118,7 +119,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
         serverName, destinationType.name(), destServerName, packet.getChannelName(),
         packet.getMessageBytes().length, consumerId);
 
-      BungeeToSpigotConnection connection = bungeeTieIn.getConnection(destServerName);
+      BungeeToSpigotConnection connection = velocityTieIn.getConnection(destServerName);
 
       // If the connection does not exist, respond with SERVER_NOT_FOUND.
       if (connection == null)
@@ -139,7 +140,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
       return;
     }
 
-    if (destinationType == PacketToBungeeRequest.DestinationType.PLAYER_NAME)
+    if (destinationType == PacketToVelocityRequest.DestinationType.PLAYER_NAME)
     {
       String playerName = packet.getServerOrPlayerName();
 
@@ -149,7 +150,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
         serverName, destinationType.name(), playerName, packet.getChannelName(),
         packet.getMessageBytes().length, consumerId);
 
-      String destServerName = bungeeTieIn.getServerNameForPlayer(playerName);
+      String destServerName = velocityTieIn.getServerNameForPlayer(playerName);
 
       // If the player does not exist, respond with PLAYER_NOT_FOUND.
       if (destServerName == null)
@@ -166,7 +167,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
         return;
       }
 
-      BungeeToSpigotConnection connection = bungeeTieIn.getConnection(destServerName);
+      BungeeToSpigotConnection connection = velocityTieIn.getConnection(destServerName);
 
       // If the connection does not exist, respond with SERVER_NOT_FOUND.
       if (connection == null)
@@ -216,7 +217,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
   }
 
   @Override
-  public void handle(PacketToBungeeForward packet)
+  public void handle(PacketToVelocityForward packet)
   {
     Preconditions.checkNotNull(packet, "packet");
     Preconditions.checkState(channel != null, "Channel is not active");
@@ -238,7 +239,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
     if (serverNames.isEmpty())
     {
       // An empty set should send to all servers excluding source.
-      for (BungeeToSpigotConnection connection : bungeeTieIn.getConnections())
+      for (BungeeToSpigotConnection connection : velocityTieIn.getConnections())
       {
         if (connection != this)
         {
@@ -251,7 +252,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
       // If a set is specified, forward to all matched servers.
       for (String serverName : serverNames)
       {
-        BungeeToSpigotConnection connection = bungeeTieIn.getConnection(serverName);
+        BungeeToSpigotConnection connection = velocityTieIn.getConnection(serverName);
 
         if (connection != null)
         {
@@ -310,7 +311,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
     }
   }
 
-  private void handleRequestForBungee(PacketToBungeeRequest packet)
+  private void handleRequestForBungee(PacketToVelocityRequest packet)
   {
     Consumer<byte[]> onResponseConsumer = null;
     String channelName = packet.getChannelName();
@@ -341,7 +342,7 @@ public class BungeeToSpigotConnection extends AbstractPacketHandler
   }
 
   private void handleRequestForSpigot(
-    PacketToBungeeRequest packet, BungeeToSpigotConnection destConnection)
+    PacketToVelocityRequest packet, BungeeToSpigotConnection destConnection)
   {
     String channelName = packet.getChannelName();
     byte[] messageBytes = packet.getMessageBytes();

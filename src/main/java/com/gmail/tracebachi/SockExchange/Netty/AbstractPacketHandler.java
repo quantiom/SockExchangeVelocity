@@ -62,10 +62,10 @@ public abstract class AbstractPacketHandler
    *
    * @param packet Packet to handle
    */
-  public void handle(PacketToBungeeRegister packet)
+  public void handle(PacketToVelocityRegister packet)
   {
     throw new IllegalArgumentException(
-      "Received an unsupported packet. Type: " + PacketToBungeeRegister.class.getName());
+      "Received an unsupported packet. Type: " + PacketToVelocityRegister.class.getName());
   }
 
   /**
@@ -84,10 +84,10 @@ public abstract class AbstractPacketHandler
    *
    * @param packet Packet to handle
    */
-  public void handle(PacketToBungeeRequest packet)
+  public void handle(PacketToVelocityRequest packet)
   {
     throw new IllegalArgumentException(
-      "Received an unsupported packet. Type: " + PacketToBungeeRequest.class.getName());
+      "Received an unsupported packet. Type: " + PacketToVelocityRequest.class.getName());
   }
 
   /**
@@ -106,10 +106,10 @@ public abstract class AbstractPacketHandler
    *
    * @param packet Packet to handle
    */
-  public void handle(PacketToBungeeForward packet)
+  public void handle(PacketToVelocityForward packet)
   {
     throw new IllegalArgumentException(
-      "Received an unsupported packet. Type: " + PacketToBungeeForward.class.getName());
+      "Received an unsupported packet. Type: " + PacketToVelocityForward.class.getName());
   }
 
   /**
